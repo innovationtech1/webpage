@@ -1,0 +1,623 @@
+<title>InnovationTech</title>
+<meta name="description" content="Servicios digitales con IA para negocios locales: páginas web, chatbots de WhatsApp y presencia digital.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #EEF1F7;
+    --bg-2: #E6EBF3;
+    --surface: #FFFFFF;
+    --surface-2: #F5F8FC;
+    --glass: rgba(255,255,255,.72);
+    --ink: #0C1526;
+    --ink-soft: #24334C;
+    --muted: #58657E;
+    --line: #DCE3EF;
+    --line-soft: #E9EEF6;
+    --accent: #2450E6;
+    --accent-2: #12B4E6;
+    --accent-ink: #1636A8;
+    --amber: #F5990B;
+    --wa: #1FB855;
+    --wa-ink: #0C7C39;
+    --good: #12A150;
+    --grad: linear-gradient(120deg, #2450E6, #12B4E6);
+    --shadow-xl: 0 40px 80px -36px rgba(12,21,38,.34);
+    --shadow: 0 20px 44px -24px rgba(12,21,38,.28);
+    --shadow-sm: 0 4px 14px -6px rgba(12,21,38,.22);
+    --radius: 18px;
+    --maxw: 1140px;
+    --font-display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #070A11; --bg-2: #0A0F1A; --surface: #121A28; --surface-2: #0E1522;
+      --glass: rgba(18,26,40,.7); --ink: #EAF0FB; --ink-soft: #C4D0E4; --muted: #8A99B6;
+      --line: #212C40; --line-soft: #19212F; --accent: #5B82FF; --accent-2: #35D0F2;
+      --accent-ink: #A9BEFF; --amber: #FFBC49; --wa: #25D366; --wa-ink: #4BE38A; --good: #35D07F;
+      --grad: linear-gradient(120deg, #5B82FF, #35D0F2);
+      --shadow-xl: 0 40px 90px -40px rgba(0,0,0,.75); --shadow: 0 24px 50px -28px rgba(0,0,0,.65); --shadow-sm: 0 4px 16px -6px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #070A11; --bg-2: #0A0F1A; --surface: #121A28; --surface-2: #0E1522;
+    --glass: rgba(18,26,40,.7); --ink: #EAF0FB; --ink-soft: #C4D0E4; --muted: #8A99B6;
+    --line: #212C40; --line-soft: #19212F; --accent: #5B82FF; --accent-2: #35D0F2;
+    --accent-ink: #A9BEFF; --amber: #FFBC49; --wa: #25D366; --wa-ink: #4BE38A; --good: #35D07F;
+    --grad: linear-gradient(120deg, #5B82FF, #35D0F2);
+    --shadow-xl: 0 40px 90px -40px rgba(0,0,0,.75); --shadow: 0 24px 50px -28px rgba(0,0,0,.65); --shadow-sm: 0 4px 16px -6px rgba(0,0,0,.55);
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.04; text-wrap: balance; margin: 0; letter-spacing: -.02em; }
+  p { margin: 0; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 22px; }
+  .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  .eyebrow { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-ink); display: inline-flex; align-items: center; gap: .6em; }
+  .eyebrow::before { content: ""; width: 20px; height: 2px; background: var(--grad); display: inline-block; border-radius: 2px; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px 6px 8px; font-size: .82rem; font-weight: 600; color: var(--ink-soft); box-shadow: var(--shadow-sm); }
+  .pill .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--grad); display: grid; place-items: center; color: #fff; font-size: .7rem; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-family: var(--font-body); font-weight: 600; font-size: .95rem; padding: 13px 22px; border-radius: 12px; border: 1px solid transparent; cursor: pointer; transition: transform .16s ease, box-shadow .2s, background .2s, border-color .2s; white-space: nowrap; }
+  .btn:active { transform: translateY(1px); }
+  .btn-wa { background: var(--wa); color: #06331A; box-shadow: var(--shadow-sm); }
+  :root[data-theme="dark"] .btn-wa, :root:not([data-theme="light"]) .btn-wa { color: #05230F; }
+  .btn-wa:hover { box-shadow: 0 10px 26px -8px color-mix(in srgb, var(--wa) 70%, transparent); transform: translateY(-1px); }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: var(--shadow-sm); }
+  .btn-primary:hover { box-shadow: 0 12px 30px -10px var(--accent); transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-sm { padding: 9px 15px; font-size: .88rem; }
+  .nav .btn-wa { display: none; }
+
+  /* header */
+  header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--glass); backdrop-filter: blur(16px) saturate(140%); border-bottom: 1px solid var(--line-soft); }
+  .nav { display: flex; align-items: center; gap: 20px; height: 66px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 1.18rem; letter-spacing: -.03em; }
+  .brand .it { color: var(--accent); }
+  .mark { width: 32px; height: 32px; flex: none; }
+  .nav-links { display: flex; gap: 26px; margin-left: auto; }
+  .nav-links a { font-size: .92rem; color: var(--muted); font-weight: 500; transition: color .18s; position: relative; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-tools { display: flex; align-items: center; gap: 10px; margin-left: 20px; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft); cursor: pointer; display: grid; place-items: center; transition: border-color .18s, color .18s; }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* hero */
+  .hero { position: relative; padding-block: 72px 48px; overflow: hidden; }
+  .mesh { position: absolute; inset: -20% -10% auto -10%; height: 620px; z-index: 0; pointer-events: none; filter: blur(8px); opacity: .9; }
+  .mesh::before, .mesh::after { content: ""; position: absolute; border-radius: 50%; }
+  .mesh::before { width: 520px; height: 520px; top: -120px; left: 6%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 42%, transparent), transparent 66%); }
+  .mesh::after { width: 460px; height: 460px; top: -40px; right: 4%; background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 38%, transparent), transparent 66%); }
+  .dots { position: absolute; inset: 0; z-index: 0; background-image: radial-gradient(color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px); background-size: 26px 26px; -webkit-mask-image: linear-gradient(to bottom, #000, transparent 70%); mask-image: linear-gradient(to bottom, #000, transparent 70%); pointer-events: none; }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 50px; align-items: center; }
+  .hero h1 { font-size: clamp(2.4rem, 5.6vw, 4rem); font-weight: 800; margin-top: 20px; }
+  .hero .lede { margin-top: 20px; font-size: 1.14rem; color: var(--muted); max-width: 36ch; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .hero-chips { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+  .hero-chips span { display: inline-flex; align-items: center; gap: 7px; font-size: .85rem; color: var(--muted); font-weight: 500; }
+  .hero-chips svg { color: var(--good); flex: none; }
+
+  /* hero visual cluster */
+  .cluster { position: relative; min-height: 380px; }
+  .win { position: absolute; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-xl); }
+  .win-browser { top: 8px; left: 0; right: 34px; }
+  .win-bar { height: 34px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1px solid var(--line-soft); }
+  .win-bar i { width: 9px; height: 9px; border-radius: 50%; }
+  .win-bar .u { margin-left: 10px; flex: 1; height: 14px; border-radius: 7px; background: var(--surface-2); }
+  .win-body { padding: 16px; }
+  .sk { border-radius: 7px; background: linear-gradient(90deg, var(--surface-2), color-mix(in srgb, var(--accent) 8%, var(--surface-2))); }
+  .sk.hero-img { height: 74px; background: var(--grad); opacity: .85; margin-bottom: 12px; }
+  .sk.l1 { height: 12px; width: 60%; margin-bottom: 8px; } .sk.l2 { height: 10px; width: 90%; margin-bottom: 8px; } .sk.l3 { height: 10px; width: 78%; }
+  .win-row { display: flex; gap: 8px; margin-top: 14px; }
+  .win-row .sk { height: 46px; flex: 1; }
+  .chatmini { bottom: 6px; right: 0; width: 220px; padding: 12px; }
+  .chatmini .ch-h { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--line-soft); }
+  .chatmini .av { width: 30px; height: 30px; border-radius: 8px; background: var(--wa); color: #fff; display: grid; place-items: center; }
+  .chatmini .nm { font-size: .82rem; font-weight: 600; }
+  .chatmini .stt { font-size: .66rem; color: var(--good); }
+  .chatmini .bub { font-size: .78rem; border-radius: 10px; padding: 7px 10px; margin-top: 8px; max-width: 88%; }
+  .chatmini .bub.them { background: var(--surface-2); border: 1px solid var(--line-soft); }
+  .chatmini .bub.me { background: var(--wa); color: #06331A; margin-left: auto; }
+  :root[data-theme="dark"] .chatmini .bub.me, :root:not([data-theme="light"]) .chatmini .bub.me { color: #05230F; }
+  .float-badge { position: absolute; top: -6px; right: 0; z-index: 3; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 9px; font-size: .8rem; font-weight: 600; }
+  .float-badge .ic { width: 26px; height: 26px; border-radius: 7px; background: color-mix(in srgb, var(--amber) 20%, transparent); color: var(--amber); display: grid; place-items: center; }
+
+  /* marquee */
+  .marquee-wrap { border-block: 1px solid var(--line-soft); background: var(--surface-2); overflow: hidden; }
+  .marquee { display: flex; gap: 44px; padding-block: 16px; white-space: nowrap; animation: slide 26s linear infinite; }
+  .marquee span { font-family: var(--font-display); font-weight: 600; color: var(--muted); font-size: 1rem; display: inline-flex; align-items: center; gap: 44px; }
+  .marquee span::after { content: "•"; color: var(--accent); }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* section shell */
+  section { padding-block: 72px; position: relative; }
+  .sec-head { max-width: 62ch; margin-bottom: 44px; }
+  .sec-head h2 { font-size: clamp(1.8rem, 3.8vw, 2.6rem); margin-top: 14px; }
+  .sec-head p { margin-top: 15px; color: var(--muted); font-size: 1.06rem; }
+
+  /* services */
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .svc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px 26px; display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden; transition: transform .22s ease, border-color .22s, box-shadow .22s; }
+  .svc::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
+  .svc:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); box-shadow: var(--shadow); }
+  .svc:hover::before { transform: scaleX(1); }
+  .svc.feature { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .svc.feature::before { transform: scaleX(1); }
+  .svc.feature .svc-desc, .svc.feature .svc-li { color: color-mix(in srgb, var(--surface) 76%, transparent); }
+  .svc-tag { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); }
+  .svc.feature .svc-tag { color: var(--amber); }
+  .svc-ico { width: 50px; height: 50px; border-radius: 13px; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+  .svc.feature .svc-ico { background: color-mix(in srgb, var(--amber) 18%, transparent); color: var(--amber); }
+  .svc h3 { font-size: 1.32rem; }
+  .svc-desc { color: var(--muted); font-size: .95rem; }
+  .svc-list { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 9px; }
+  .svc-li { display: flex; gap: 9px; font-size: .9rem; align-items: flex-start; }
+  .svc-li svg { flex: none; margin-top: 3px; color: var(--accent); }
+  .svc.feature .svc-li svg { color: var(--amber); }
+  .svc-foot { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line-soft); }
+  .svc.feature .svc-foot { border-color: color-mix(in srgb, var(--surface) 18%, transparent); }
+  .svc-price { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; }
+  .svc-price small { font-family: var(--font-mono); font-weight: 500; font-size: .7rem; color: var(--muted); display: block; letter-spacing: .04em; margin-top: 2px; }
+  .svc.feature .svc-price small { color: color-mix(in srgb, var(--surface) 70%, transparent); }
+
+  /* examples */
+  .examples { background: var(--surface-2); border-block: 1px solid var(--line-soft); }
+  .demo-showcase { display: grid; grid-template-columns: 1.05fr .95fr; gap: 44px; align-items: center; }
+  .demo-copy .tag-live { display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--good); }
+  .demo-copy .tag-live::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--good); box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent);} 50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--good) 8%,transparent);} }
+  .demo-copy h3 { font-size: clamp(1.5rem,3.2vw,2.1rem); margin-top:14px; }
+  .demo-copy p { color: var(--muted); margin-top: 14px; font-size: 1.02rem; }
+  .demo-feats { list-style:none; padding:0; margin:20px 0 26px; display:flex; flex-wrap:wrap; gap:10px; }
+  .demo-feats li { font-size:.82rem; font-weight:600; background:var(--surface); border:1px solid var(--line); padding:7px 13px; border-radius:999px; color:var(--ink-soft); }
+  .demo-frame { border-radius:18px; overflow:hidden; border:1px solid var(--line); background: linear-gradient(140deg, #FBF3E4, #F5E7CE); box-shadow: var(--shadow-xl); position:relative; transition: transform .25s; }
+  .demo-frame:hover { transform: translateY(-4px) rotate(-.4deg); }
+  .demo-frame .bar { height:36px; background:#3A2416; display:flex; align-items:center; gap:6px; padding:0 13px; }
+  .demo-frame .bar i { width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .demo-inner { padding: 28px 26px 36px; position:relative; min-height:238px; }
+  .demo-inner .badge2 { display:inline-block; background:#E8B45A; color:#3A2416; font-family:var(--font-mono); font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:999px; font-weight:600; }
+  .demo-inner .dt { font-family:var(--font-display); font-weight:800; color:#3A2416; font-size:1.8rem; margin-top:12px; line-height:1.1; }
+  .demo-inner .dp { color:#6B4A32; font-size:.9rem; margin-top:8px; max-width:32ch; }
+  .demo-inner .dpill { display:inline-block; margin-top:16px; background:#E0452B; color:#fff; font-weight:700; font-size:.82rem; padding:9px 16px; border-radius:999px; font-family:var(--font-body); }
+  .demo-wa { position:absolute; right:18px; bottom:18px; width:48px; height:48px; border-radius:50%; background:#1FA855; display:grid; place-items:center; color:#fff; box-shadow:0 8px 18px -4px rgba(12,124,57,.55); }
+
+  /* stats band */
+  .stats-band { background: var(--ink); color: var(--surface); border-radius: 24px; padding: 44px 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; position: relative; overflow: hidden; }
+  .stats-band .glow { position: absolute; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 45%, transparent), transparent 70%); top: -220px; left: -80px; pointer-events: none; }
+  .stat2 { position: relative; text-align: center; }
+  .stat2 .n { font-family: var(--font-display); font-weight: 800; font-size: clamp(2rem, 4vw, 2.9rem); background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .stat2 .l { font-size: .86rem; color: color-mix(in srgb, var(--surface) 74%, transparent); margin-top: 6px; }
+
+  /* process */
+  .process { background: var(--surface-2); border-block: 1px solid var(--line-soft); }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; position: relative; }
+  .steps::before { content: ""; position: absolute; top: 26px; left: 8%; right: 8%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); opacity: .35; }
+  .step { position: relative; }
+  .step .num { width: 52px; height: 52px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; color: var(--accent); font-size: 1.1rem; position: relative; z-index: 1; box-shadow: var(--shadow-sm); }
+  .step h3 { font-size: 1.14rem; margin-top: 16px; }
+  .step p { margin-top: 8px; color: var(--muted); font-size: .92rem; }
+
+  /* pricing */
+  .price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .plan { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; transition: transform .2s, box-shadow .2s; }
+  .plan:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .plan.best { border-color: transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box; border: 1.5px solid transparent; box-shadow: var(--shadow); }
+  .plan-name { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+  .plan-badge { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: var(--grad); padding: 4px 10px; border-radius: 20px; align-self: flex-start; }
+  .plan-price { font-family: var(--font-display); font-weight: 800; font-size: 1.95rem; letter-spacing: -.03em; }
+  .plan-price span { font-family: var(--font-mono); font-size: .72rem; font-weight: 500; color: var(--muted); letter-spacing: .02em; }
+  .plan-desc { font-size: .88rem; color: var(--muted); flex: 1; }
+  .plan-type { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent-ink); padding-top: 12px; border-top: 1px solid var(--line-soft); }
+  .price-note { margin-top: 24px; font-size: .9rem; color: var(--muted); display: flex; gap: 10px; align-items: flex-start; }
+  .price-note svg { flex: none; margin-top: 2px; color: var(--amber); }
+
+  /* faq accordion */
+  .faq-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  details.faq { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 4px 20px; transition: border-color .2s; }
+  details.faq[open] { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+  details.faq summary { list-style: none; cursor: pointer; font-weight: 700; font-size: 1.02rem; padding: 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary .plus { flex: none; width: 22px; height: 22px; position: relative; transition: transform .2s; color: var(--accent); }
+  details.faq[open] summary .plus { transform: rotate(45deg); }
+  details.faq p { color: var(--muted); font-size: .93rem; padding-bottom: 18px; margin-top: -4px; }
+
+  /* CTA */
+  .cta-band { background: var(--ink); color: var(--surface); border-radius: 26px; padding: 58px 44px; text-align: center; position: relative; overflow: hidden; }
+  .cta-band h2 { font-size: clamp(1.9rem, 4.2vw, 2.9rem); color: var(--surface); }
+  .cta-band p { color: color-mix(in srgb, var(--surface) 78%, transparent); margin-top: 16px; font-size: 1.08rem; max-width: 48ch; margin-inline: auto; }
+  .cta-band .hero-cta { justify-content: center; margin-top: 32px; }
+  .cta-glow { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%); top: -200px; right: -120px; pointer-events: none; }
+  .cta-glow.two { background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 45%, transparent), transparent 70%); top: auto; bottom: -240px; left: -120px; right: auto; }
+
+  /* footer */
+  footer { padding-block: 44px 32px; border-top: 1px solid var(--line-soft); }
+  .foot { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+  .foot-links { display: flex; gap: 20px; flex-wrap: wrap; }
+  .foot-links a { color: var(--muted); font-size: .88rem; }
+  .foot-links a:hover { color: var(--accent); }
+  .foot-note { color: var(--muted); font-size: .82rem; }
+
+  @media (max-width: 940px) {
+    .hero-grid, .demo-showcase { grid-template-columns: 1fr; gap: 40px; }
+    .hero .lede { max-width: none; }
+    .cluster { min-height: 340px; max-width: 460px; }
+    .services, .steps, .price-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps::before { display: none; }
+    .stats-band { grid-template-columns: repeat(2, 1fr); }
+    .faq-list { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .nav .btn-wa { display: inline-flex; }
+  }
+  @media (max-width: 560px) {
+    .services, .steps, .price-grid, .stats-band { grid-template-columns: 1fr; }
+    .hero { padding-block: 48px 28px; }
+    section { padding-block: 52px; }
+    .cta-band, .stats-band { padding: 40px 24px; }
+    .nav .btn-wa .lbl { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .svc, .btn, .demo-frame, .plan { transition: none; }
+    .marquee { animation: none; }
+    .demo-copy .tag-live::before { animation: none; }
+  }
+</style>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand" aria-label="InnovationTech, inicio">
+      <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2450E6"/><stop offset="1" stop-color="#12B4E6"/></linearGradient></defs>
+        <rect x="1" y="1" width="30" height="30" rx="9" fill="url(#g)"/>
+        <path d="M9 22 L15 10 L17 10 L23 22 M11.6 17 H20.4" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="16" cy="7.4" r="2.2" fill="#FFC24D"/>
+      </svg>
+      <span>Innovation<span class="it">Tech</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Secciones">
+      <a href="#servicios">Servicios</a>
+      <a href="#ejemplos">Ejemplos</a>
+      <a href="#precios">Precios</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="icon-btn" id="themeBtn" aria-label="Cambiar tema" title="Cambiar tema">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-wa btn-sm js-wa" href="#contacto"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg><span class="lbl">Escríbenos</span></a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="mesh" aria-hidden="true"></div>
+    <div class="dots" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="pill"><span class="dot">✦</span> Servicios digitales con Inteligencia Artificial</span>
+          <h1>Tu negocio local, <span class="grad-text">visible y vendiendo</span> en internet.</h1>
+          <p class="lede">Creamos tu página web, ponemos un chatbot en tu WhatsApp y cuidamos tu presencia digital — para que consigas más clientes sin complicarte.</p>
+          <div class="hero-cta">
+            <a class="btn btn-wa js-wa" href="#contacto"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg>Agenda una muestra gratis</a>
+            <a class="btn btn-ghost" href="#servicios">Ver servicios</a>
+          </div>
+          <div class="hero-chips">
+            <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg>Muestra sin costo</span>
+            <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg>Entrega desde 3 días</span>
+            <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg>Pagas la mitad al final</span>
+          </div>
+        </div>
+        <div class="cluster" aria-label="Ejemplo de una página web con chatbot">
+          <div class="float-badge"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>Lista en días</div>
+          <div class="win win-browser">
+            <div class="win-bar"><i style="background:#F5990B"></i><i style="background:#1FB855"></i><i style="background:#2450E6"></i><span class="u"></span></div>
+            <div class="win-body">
+              <div class="sk hero-img"></div>
+              <div class="sk l1"></div><div class="sk l2"></div><div class="sk l3"></div>
+              <div class="win-row"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+            </div>
+          </div>
+          <div class="win chatmini">
+            <div class="ch-h"><div class="av"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22C17.5 21.82 21.96 17.37 21.96 11.91 21.96 6.45 17.5 2 12.04 2z"/></svg></div><div><div class="nm">Tu negocio</div><div class="stt">● en línea</div></div></div>
+            <div class="bub them">¿Están abiertos hoy? 🕐</div>
+            <div class="bub me">¡Sí! Hasta las 8pm ✅</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee">
+      <span>Restaurantes Clínicas dentales Salones y barberías Gimnasios Talleres Cafeterías Veterinarias Boutiques</span>
+      <span>Restaurantes Clínicas dentales Salones y barberías Gimnasios Talleres Cafeterías Veterinarias Boutiques</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="servicios">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Qué hacemos</span>
+        <h2>Tres servicios que hacen crecer tu negocio.</h2>
+        <p>Simple y directo: te ponemos en internet, automatizamos tu atención y cuidamos que te encuentren. Cada uno funciona solo o combinado.</p>
+      </div>
+      <div class="services">
+        <article class="svc">
+          <div class="svc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M7 12h6"/></svg></div>
+          <span class="svc-tag">Páginas web</span>
+          <h3>Página web profesional</h3>
+          <p class="svc-desc">Un sitio que se ve bien en el celular, carga rápido y convierte visitas en clientes.</p>
+          <ul class="svc-list">
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>Diseño para celular y computadora</li>
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>Botón de WhatsApp y formulario</li>
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>Tu dominio propio</li>
+          </ul>
+          <div class="svc-foot"><span class="svc-price">$150–$700<small>USD · pago único</small></span></div>
+        </article>
+
+        <article class="svc feature">
+          <div class="svc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.6-.8L3 21l1.9-5.4A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg></div>
+          <span class="svc-tag">Lo más pedido</span>
+          <h3>Chatbot de WhatsApp</h3>
+          <p class="svc-desc">Un asistente con IA que responde preguntas, agenda citas y toma pedidos automáticamente, todo el día.</p>
+          <ul class="svc-list">
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>Responde solo, 24/7</li>
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>Agenda citas y toma pedidos</li>
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>No pierdes ningún cliente</li>
+          </ul>
+          <div class="svc-foot"><span class="svc-price">$200 + $50<small>USD · setup + mensual</small></span></div>
+        </article>
+
+        <article class="svc">
+          <div class="svc-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/></svg></div>
+          <span class="svc-tag">Presencia digital</span>
+          <h3>Que te encuentren y te sigan</h3>
+          <p class="svc-desc">Optimizamos tu Google Maps y manejamos tus redes con contenido cada mes. Ingreso recurrente para ti, tranquilidad para tu cliente.</p>
+          <ul class="svc-list">
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>Google Maps optimizado</li>
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>8 publicaciones al mes</li>
+            <li class="svc-li"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>Reporte de resultados</li>
+          </ul>
+          <div class="svc-foot"><span class="svc-price">$150–$300<small>USD · al mes</small></span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXAMPLES -->
+  <section id="ejemplos" class="examples">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Ejemplos reales</span>
+        <h2>Mira lo que construimos.</h2>
+        <p>Esto no es una promesa: es una página web con chatbot de WhatsApp funcionando. Ábrela, navega el menú y platica con el bot.</p>
+      </div>
+      <div class="demo-showcase">
+        <div class="demo-copy">
+          <span class="tag-live">Demo en vivo</span>
+          <h3>Tortas Tortuga — tortería local</h3>
+          <p>Una página completa para un negocio de comida: menú interactivo, horario, ubicación, reseñas y un chatbot que responde precios y toma pedidos por WhatsApp, las 24 horas.</p>
+          <ul class="demo-feats">
+            <li>Menú por categorías</li>
+            <li>Chatbot con IA</li>
+            <li>Pedidos por WhatsApp</li>
+            <li>Diseño móvil</li>
+          </ul>
+          <a class="btn btn-primary" href="demo.html" target="_blank" rel="noopener">Abrir demo en vivo
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+        </div>
+        <div class="demo-frame" aria-hidden="true">
+          <div class="bar"><i style="background:#E0452B"></i><i style="background:#F2A93B"></i><i style="background:#6C8B3C"></i></div>
+          <div class="demo-inner">
+            <span class="badge2">🐢 Desde 1998</span>
+            <div class="dt">Tortas que se sienten como en casa</div>
+            <div class="dp">Pan recién horneado, ingredientes fresquecitos y esa sazón de siempre.</div>
+            <span class="dpill">Pedir por WhatsApp</span>
+            <div class="demo-wa"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section>
+    <div class="wrap">
+      <div class="stats-band">
+        <div class="glow" aria-hidden="true"></div>
+        <div class="stat2"><div class="n" data-count="24">24/7</div><div class="l">Tu negocio atendiendo, incluso mientras duermes</div></div>
+        <div class="stat2"><div class="n" data-count="3">3</div><div class="l">Días desde que empezamos hasta tu primer entregable</div></div>
+        <div class="stat2"><div class="n" data-count="100">100%</div><div class="l">De tus mensajes contestados al instante por el bot</div></div>
+        <div class="stat2"><div class="n" data-count="0">$0</div><div class="l">Cuesta la muestra que te enseñamos antes de decidir</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="proceso" class="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Cómo trabajamos</span>
+        <h2>De la idea a estar en línea, en días.</h2>
+        <p>Sin juntas eternas ni tecnicismos. Un proceso claro en cuatro pasos.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Platicamos</h3><p>Nos cuentas de tu negocio por WhatsApp. En 5 minutos entendemos qué necesitas.</p></div>
+        <div class="step"><div class="num">2</div><h3>Muestra gratis</h3><p>Te enseñamos sin costo cómo se vería tu página o tu bot. Si te gusta, seguimos.</p></div>
+        <div class="step"><div class="num">3</div><h3>Lo construimos</h3><p>Con el 50% de anticipo, lo entregamos listo en 3 a 10 días según el servicio.</p></div>
+        <div class="step"><div class="num">4</div><h3>Lanzamos y cuidamos</h3><p>Sale al aire, pagas el resto, y quedamos disponibles para darte soporte.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="precios">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Precios claros</span>
+        <h2>Precios en dólares, sin sorpresas.</h2>
+        <p>Paquetes de arranque, todo en USD. Cotización exacta según tu negocio, siempre con muestra previa.</p>
+      </div>
+      <div class="price-grid">
+        <div class="plan">
+          <div class="plan-name">Landing básica</div>
+          <div class="plan-price">$150<span> – $250</span></div>
+          <p class="plan-desc">Una página con tu información, diseño móvil y botón de WhatsApp. Entrega en 3–5 días.</p>
+          <div class="plan-type">Pago único</div>
+        </div>
+        <div class="plan">
+          <div class="plan-name">Sitio completo</div>
+          <div class="plan-price">$400<span> – $700</span></div>
+          <p class="plan-desc">De 3 a 5 páginas, formulario de contacto y alta en Google Maps. Entrega en 1–2 semanas.</p>
+          <div class="plan-type">Pago único</div>
+        </div>
+        <div class="plan best">
+          <span class="plan-badge">Recomendado</span>
+          <div class="plan-name">Chatbot WhatsApp</div>
+          <div class="plan-price">$200<span> + $50/mes</span></div>
+          <p class="plan-desc">Bot con IA que responde, agenda y toma pedidos 24/7. La mensualidad cubre soporte y ajustes.</p>
+          <div class="plan-type">Único + recurrente</div>
+        </div>
+        <div class="plan">
+          <div class="plan-name">Presencia digital</div>
+          <div class="plan-price">$150<span> – $300/mes</span></div>
+          <p class="plan-desc">Google Maps optimizado y 8 publicaciones mensuales en redes, con reporte.</p>
+          <div class="plan-type">Mensual recurrente</div>
+        </div>
+      </div>
+      <p class="price-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Los precios finales dependen del tamaño y necesidades de tu negocio. Siempre te damos una cotización clara y una muestra antes de que pagues nada.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Preguntas frecuentes</span>
+        <h2>Lo que todos preguntan.</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq" open><summary>¿Cuánto tarda mi página?<span class="plus"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Una landing sencilla en 3 a 5 días; un sitio completo en 1 a 2 semanas. Un chatbot suele estar listo en menos de una semana.</p></details>
+        <details class="faq"><summary>¿Cómo se paga?<span class="plus"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>50% de anticipo para empezar y 50% al entregar. Antes de pagar, siempre te enseñamos una muestra sin costo.</p></details>
+        <details class="faq"><summary>¿Necesito saber de tecnología?<span class="plus"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Para nada. Nosotros nos encargamos de todo y tú solo apruebas. Nos coordinamos por WhatsApp, en lenguaje claro.</p></details>
+        <details class="faq"><summary>¿Qué es la mensualidad del chatbot?<span class="plus"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Cubre el soporte, los ajustes y mantener tu bot funcionando 24/7. Puedes cancelarla cuando quieras.</p></details>
+        <details class="faq"><summary>¿Trabajan con negocios pequeños?<span class="plus"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Sí, son nuestra especialidad: restaurantes, clínicas, salones, talleres y tiendas locales.</p></details>
+        <details class="faq"><summary>¿Y si ya tengo página?<span class="plus"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>La revisamos gratis y te decimos qué mejorar. Podemos rediseñarla o solo agregarte el chatbot.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contacto">
+    <div class="wrap">
+      <div class="cta-band">
+        <div class="cta-glow" aria-hidden="true"></div>
+        <div class="cta-glow two" aria-hidden="true"></div>
+        <span class="eyebrow" style="color:var(--amber);justify-content:center;">Empecemos hoy</span>
+        <h2 style="margin-top:14px;">¿Listo para que tu negocio crezca en internet?</h2>
+        <p>Escríbenos por WhatsApp. Te hacemos una muestra gratis y sin compromiso — tú decides si te gusta.</p>
+        <div class="hero-cta">
+          <a class="btn btn-wa js-wa" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg>Escríbenos por WhatsApp</a>
+          <a class="btn btn-ghost" style="border-color:color-mix(in srgb,var(--surface) 30%,transparent);color:var(--surface);" href="mailto:contacto@innovationtech.mx">Enviar correo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a href="#top" class="brand" style="font-size:1.05rem;">
+      <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true" style="width:26px;height:26px;">
+        <rect x="1" y="1" width="30" height="30" rx="9" fill="url(#g)"/>
+        <path d="M9 22 L15 10 L17 10 L23 22 M11.6 17 H20.4" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="16" cy="7.4" r="2.2" fill="#FFC24D"/>
+      </svg>
+      <span>Innovation<span class="it">Tech</span></span>
+    </a>
+    <nav class="foot-links" aria-label="Pie de página">
+      <a href="#servicios">Servicios</a>
+      <a href="#ejemplos">Ejemplos</a>
+      <a href="#precios">Precios</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="foot-note">© <span id="year"></span> InnovationTech · Servicios digitales con IA</div>
+  </div>
+</footer>
+
+<script>
+  var WHATSAPP = "12109900532"; // Estados Unidos (+1) · 210-990-0532
+  var MENSAJE = encodeURIComponent("Hola InnovationTech, quiero información sobre sus servicios digitales.");
+  (function () {
+    var link = "https://wa.me/" + WHATSAPP + "?text=" + MENSAJE;
+    function openWA(e) {
+      if (e) e.preventDefault();
+      var w = window.open(link, "_blank", "noopener");
+      if (!w) alert("Escríbenos por WhatsApp al +1 210-990-0532");
+    }
+    document.querySelectorAll(".js-wa").forEach(function (a) {
+      a.setAttribute("href", link); a.setAttribute("target", "_blank"); a.setAttribute("rel", "noopener");
+      a.addEventListener("click", openWA);
+    });
+    // Abrir enlaces externos en pestaña nueva (evita el bloqueo del previsualizador)
+    document.querySelectorAll('a[target="_blank"]:not(.js-wa)').forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var w = window.open(a.href, "_blank", "noopener");
+        if (!w) window.location.href = a.href;
+      });
+    });
+    var y = document.getElementById("year"); if (y) y.textContent = new Date().getFullYear();
+  })();
+
+  // tema claro / oscuro
+  (function () {
+    var root = document.documentElement, btn = document.getElementById("themeBtn");
+    var saved = null;
+    try { saved = localStorage.getItem("it-theme"); } catch (e) {}
+    if (saved === "dark" || saved === "light") root.setAttribute("data-theme", saved);
+    btn.addEventListener("click", function () {
+      var attr = root.getAttribute("data-theme");
+      var isDark = attr === "dark" || (!attr && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      var next = isDark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("it-theme", next); } catch (e) {}
+    });
+  })();
+
+  // contador animado (los números finales ya están visibles en el HTML)
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) return;
+    var suffix = { "24": "/7", "3": "", "100": "%", "0": "" };
+    var pre = { "0": "$" };
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target, target = parseInt(el.dataset.count, 10), t0 = null, dur = 900;
+        var p = pre[el.dataset.count] || "", s = suffix[el.dataset.count] || "";
+        function step(ts) {
+          if (!t0) t0 = ts;
+          var k = Math.min((ts - t0) / dur, 1), val = Math.round(target * (1 - Math.pow(1 - k, 3)));
+          el.textContent = p + val + s;
+          if (k < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+        io.unobserve(el);
+      });
+    }, { threshold: .5 });
+    document.querySelectorAll("[data-count]").forEach(function (el) { io.observe(el); });
+  })();
+</script>
