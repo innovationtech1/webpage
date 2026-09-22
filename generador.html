@@ -177,6 +177,7 @@ Pedidos por WhatsApp</textarea>
     <div class="actions">
       <button class="btn btn-primary" id="btnDownload"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Descargar mi página (.html)</button>
       <button class="btn btn-ghost" id="btnCopy"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copiar código HTML</button>
+      <div class="hint" id="lockNote" style="text-align:center;margin-top:2px;"></div>
     </div>
   </section>
 
@@ -341,10 +342,31 @@ Pedidos por WhatsApp</textarea>
     });
   });
 
-  // descargar
-  $("btnDownload").addEventListener("click",function(){
+  // ================== PAGO (Stripe Payment Link) ==================
+  // 1) Crea un Payment Link en Stripe y pega aquí su URL (ej: https://buy.stripe.com/xxxxxxxx)
+  var PAYMENT_LINK = "";
+  // 2) Cambia el precio que se muestra si es distinto
+  var PRICE_LABEL = "$99 USD";
+  // (El dueño puede usarlo gratis abriendo la página con ?owner=1 al final de la URL)
+  var unlocked = false;
+
+  function params(){ try{ return new URLSearchParams(location.search); }catch(e){ return null; } }
+  function saveData(){ try{
+    localStorage.setItem("it_gen_data", JSON.stringify({
+      name:$("f_name").value, giro:$("f_giro").value, slogan:$("f_slogan").value, wa:$("f_wa").value,
+      serv:$("f_serv").value, city:$("f_city").value, mail:$("f_mail").value, estilo:st.estilo, color:st.color }));
+  }catch(e){} }
+  function restoreData(){ try{
+    var d=JSON.parse(localStorage.getItem("it_gen_data")||"null"); if(!d) return;
+    $("f_name").value=d.name||""; $("f_giro").value=d.giro||"restaurante"; $("f_slogan").value=d.slogan||"";
+    $("f_wa").value=d.wa||""; $("f_serv").value=d.serv||""; $("f_city").value=d.city||""; $("f_mail").value=d.mail||"";
+    st.estilo=d.estilo||"moderno"; st.color=d.color||"#2450E6";
+    document.querySelectorAll("#f_estilo > button").forEach(function(b){b.setAttribute("aria-pressed", b.dataset.k===st.estilo?"true":"false");});
+    document.querySelectorAll("#f_color > button").forEach(function(b){b.setAttribute("aria-pressed", b.dataset.k===st.color?"true":"false");});
+  }catch(e){} }
+
+  function doDownload(){
     var d=data();
-    if(!d.wa){ toast("Escribe tu número de WhatsApp"); return; }
     try{
       var blob=new Blob([current],{type:"text/html"});
       var url=URL.createObjectURL(blob);
@@ -353,20 +375,43 @@ Pedidos por WhatsApp</textarea>
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function(){URL.revokeObjectURL(url);},1500);
       toast("¡Descargando tu página! 🎉");
-    }catch(e){ toast("Usa el botón Copiar si la descarga no funciona aquí"); }
-  });
-
-  // copiar
-  $("btnCopy").addEventListener("click",function(){
+    }catch(e){ toast("Usa Copiar si la descarga no funciona aquí"); }
+  }
+  function doCopy(){
     function done(){ toast("¡Código copiado! Pégalo en un archivo .html"); }
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(current).then(done).catch(function(){ fallback(); });
-    } else fallback();
-    function fallback(){
-      var t=document.createElement("textarea"); t.value=current; document.body.appendChild(t); t.select();
-      try{ document.execCommand("copy"); done(); }catch(e){ toast("No se pudo copiar aquí"); } t.remove();
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(current).then(done).catch(fallback); }
+    else fallback();
+    function fallback(){ var t=document.createElement("textarea"); t.value=current; document.body.appendChild(t); t.select();
+      try{ document.execCommand("copy"); done(); }catch(e){ toast("No se pudo copiar aquí"); } t.remove(); }
+  }
+  function goToPay(){
+    if(!PAYMENT_LINK){ toast("El pago aún no está configurado"); return; }
+    if(!data().wa){ toast("Escribe tu número de WhatsApp"); return; }
+    saveData();
+    location.href = PAYMENT_LINK;
+  }
+  function renderLock(){
+    var dl=$("btnDownload"), cp=$("btnCopy"), note=$("lockNote");
+    if(unlocked){
+      dl.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Descargar mi página (.html)';
+      cp.style.display=""; cp.textContent="Copiar código HTML";
+      note.textContent="✅ Desbloqueado — descarga tu página cuando quieras.";
+    }else{
+      dl.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Pagar y descargar ('+PRICE_LABEL+')';
+      cp.style.display="none";
+      note.textContent="🔒 Genera y previsualiza gratis. Paga una vez para descargar tu página lista.";
     }
-  });
+  }
+  $("btnDownload").addEventListener("click",function(){ unlocked ? doDownload() : goToPay(); });
+  $("btnCopy").addEventListener("click",function(){ if(unlocked) doCopy(); });
 
-  render();
+  // Arranque
+  (function(){
+    var p=params();
+    if(p && p.get("owner")==="1"){ unlocked=true; }
+    if(p && p.get("pago")==="ok"){ unlocked=true; restoreData(); }
+    render();
+    renderLock();
+    if(p && p.get("pago")==="ok"){ setTimeout(function(){ toast("¡Gracias por tu pago! 🎉"); doDownload(); }, 900); }
+  })();
 </script>
