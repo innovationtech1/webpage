@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>InnovationTech</title>
 <meta name="description" content="Servicios digitales con IA para negocios locales: páginas web, chatbots de WhatsApp y presencia digital.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -218,6 +219,13 @@
   .plan-type { font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent-ink); padding-top: 12px; border-top: 1px solid var(--line-soft); }
   .price-note { margin-top: 24px; font-size: .9rem; color: var(--muted); display: flex; gap: 10px; align-items: flex-start; }
   .price-note svg { flex: none; margin-top: 2px; color: var(--amber); }
+  .reserve { margin-top: 30px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px 28px; display: flex; flex-wrap: wrap; gap: 22px; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+  .reserve::before { content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 4px; background: var(--grad); }
+  .reserve-copy { flex: 1; min-width: 260px; }
+  .reserve-copy h3 { font-size: 1.35rem; margin-top: 8px; }
+  .reserve-copy p { color: var(--muted); font-size: .95rem; margin-top: 8px; max-width: 46ch; }
+  .reserve-cta { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .reserve-note { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; color: var(--muted); }
 
   /* faq accordion */
   .faq-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -486,6 +494,7 @@
           <div class="bld-actions">
             <div class="bld-price">Tu página, desde <b>$150 USD</b> · lista en días</div>
             <a class="btn btn-wa" id="bldRequest" href="#contacto">Me gusta — solicitar esta página</a>
+            <a class="btn btn-primary js-pay" href="#" data-plan="anticipo">Apartar mi proyecto por $50</a>
             <a class="btn btn-ghost" href="generador.html" target="_blank" rel="noopener">Abrir el generador completo →</a>
           </div>
         </div>
@@ -609,6 +618,20 @@
         </div>
       </div>
       <p class="price-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Los precios finales dependen del tamaño y necesidades de tu negocio. Siempre te damos una cotización clara y una muestra antes de que pagues nada.</p>
+
+      <div class="reserve">
+        <div class="reserve-copy">
+          <span class="eyebrow" style="color:var(--amber);">Aparta tu proyecto</span>
+          <h3>Reserva tu lugar con $50 USD</h3>
+          <p>Deja tu anticipo y empezamos hoy mismo con tu muestra. Los <b>$50 se descuentan del total</b> de tu servicio — no es un cargo extra.</p>
+        </div>
+        <div class="reserve-cta">
+          <a class="btn btn-primary js-pay" href="#" data-plan="anticipo">Apartar por $50 USD
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <span class="reserve-note">Pago seguro con Stripe · se descuenta del total</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -768,6 +791,12 @@
     a.addEventListener("click", function (e) { e.preventDefault(); open_(wa("Hola InnovationTech, me interesa " + a.dataset.svc + " para mi negocio.")); });
   });
 
+  // Botones de anticipo / reserva (Stripe)
+  var PAY_LINK = "https://buy.stripe.com/test_aFaeVd3Co3LCedF7Hp6Ri01";
+  document.querySelectorAll(".js-pay").forEach(function (a) {
+    a.addEventListener("click", function (e) { e.preventDefault(); open_(PAY_LINK); });
+  });
+
   // Constructor de páginas
   var GIROS = {
     restaurante: { name: "Sabores del Centro", eye: "Bienvenido", tag: "Comida casera, servida con cariño.", cta: "Ver menú", cards: ["Menú", "Reservar", "Ubicación"] },
@@ -822,3 +851,5 @@
 })();
 </script>
 
+
+</body></html>
