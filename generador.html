@@ -221,7 +221,12 @@ Pedidos por WhatsApp</textarea>
   })();
 
   function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(function(){t.classList.remove("show");},2200); }
-  function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  // Escapa TODO texto antes de meterlo al HTML generado (evita inyección de código)
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/`/g,"&#96;"); }
+  // Solo aceptamos colores hexadecimales válidos (el color va dentro del CSS)
+  function safeColor(c){ return /^#[0-9a-fA-F]{6}$/.test(c||"") ? c : "#2450E6"; }
+  // Solo aceptamos correos con forma de correo (el correo va dentro de un enlace mailto:)
+  function safeMail(m){ m=String(m||"").trim(); return /^[^\s@<>"'`]+@[^\s@<>"'`]+\.[^\s@<>"'`]+$/.test(m) ? m : ""; }
 
   var FONTS={
     moderno:{d:"'Bricolage Grotesque',sans-serif",b:"'IBM Plex Sans',sans-serif",g:"Bricolage+Grotesque:wght@700;800&family=IBM+Plex+Sans:wght@400;600",r:"16px"},
@@ -235,79 +240,128 @@ Pedidos por WhatsApp</textarea>
   function data(){
     return {
       name:$("f_name").value.trim()||"Tu Negocio",
-      giro:$("f_giro").value,
+      giro:GIRO_LABEL[$("f_giro").value]?$("f_giro").value:"profesional",
       slogan:$("f_slogan").value.trim(),
       wa:$("f_wa").value.replace(/[^0-9]/g,""),
       serv:$("f_serv").value.split("\n").map(function(x){return x.trim();}).filter(Boolean).slice(0,6),
       city:$("f_city").value.trim(),
-      mail:$("f_mail").value.trim(),
-      estilo:st.estilo, color:st.color
+      mail:safeMail($("f_mail").value),
+      estilo:FONTS[st.estilo]?st.estilo:"moderno", color:safeColor(st.color)
     };
   }
 
   function buildSite(d){
-    var f=FONTS[d.estilo], cta=GIRO_CTA[d.giro];
+    var f=FONTS[d.estilo], cta=esc(GIRO_CTA[d.giro]), label=esc(GIRO_LABEL[d.giro]), color=safeColor(d.color);
     var waMsg=encodeURIComponent("Hola "+d.name+", vi su página y quiero más información.");
-    var waLink="https://wa.me/"+d.wa+"?text="+waMsg;
-    var servCards=d.serv.map(function(s){
-      return '<div class="card"><div class="ic">'+esc(s.charAt(0).toUpperCase())+'</div><h3>'+esc(s)+'</h3></div>';
+    var waLink=esc("https://wa.me/"+d.wa+"?text="+waMsg);
+    var servCards=d.serv.map(function(s,i){
+      return '<div class="card rv" style="--i:'+i+'"><div class="ic">'+esc(s.charAt(0).toUpperCase())+'</div><h3>'+esc(s)+'</h3></div>';
     }).join("");
-    var contactBits='<a class="cbtn wa" href="'+waLink+'" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>';
+    var contactBits='<a class="cbtn wa pulse" href="'+waLink+'" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>';
     if(d.mail) contactBits+='<a class="cbtn" href="mailto:'+esc(d.mail)+'">'+esc(d.mail)+'</a>';
     var cityLine=d.city?'<p class="loc">📍 '+esc(d.city)+'</p>':'';
+    var nServ=d.serv.length||1;
+    var stats='<section class="stats"><div class="wrap sgrid">'+
+      '<div class="stat rv"><b data-count="'+nServ+'">'+nServ+'</b><span>'+(nServ===1?'Servicio':'Servicios')+'</span></div>'+
+      '<div class="stat rv" style="--i:1"><b data-count="100" data-suf="%">100%</b><span>Atención directa por WhatsApp</span></div>'+
+      '<div class="stat rv" style="--i:2"><b data-count="24" data-suf="/7">24/7</b><span>Recibimos tus mensajes</span></div>'+
+      '</div></section>';
+    var wave='<svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,64 C240,120 480,8 720,56 C960,104 1200,24 1440,64 L1440,120 L0,120 Z" fill="#fff"/></svg>';
+    // Script de la página generada: aparición al hacer scroll y conteo de números
+    var js='(function(){var d=document,r=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,'+
+      'els=d.querySelectorAll(".rv"),nums=d.querySelectorAll("[data-count]");'+
+      'function count(el){var n=+el.getAttribute("data-count"),suf=el.getAttribute("data-suf")||"",t0=null;'+
+      'function step(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-k,3);el.textContent=Math.round(n*e)+suf;if(k<1)requestAnimationFrame(step);}requestAnimationFrame(step);}'+
+      'if(r||!("IntersectionObserver" in window)){for(var i=0;i<els.length;i++)els[i].classList.add("in");return;}'+
+      'var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;e.target.classList.add("in");'+
+      'var c=e.target.querySelectorAll("[data-count]");for(var j=0;j<c.length;j++)count(c[j]);io.unobserve(e.target);});},{threshold:.15});'+
+      'for(var i=0;i<els.length;i++)io.observe(els[i]);})();';
     return '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
     '<title>'+esc(d.name)+'</title>'+
+    '<script>document.documentElement.className+=" js";<\/script>'+
     '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'+
     '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family='+f.g+'&display=swap">'+
     '<style>'+
-    ':root{--c:'+d.color+';--r:'+f.r+';}'+
+    ':root{--c:'+color+';--r:'+f.r+';}'+
     '*{box-sizing:border-box;margin:0;padding:0;}'+
-    'body{font-family:'+f.b+';color:#1a2233;line-height:1.6;background:#fff;}'+
+    'html{scroll-behavior:smooth;}'+
+    'body{font-family:'+f.b+';color:#1a2233;line-height:1.6;background:#fff;overflow-x:hidden;}'+
     'h1,h2,h3{font-family:'+f.d+';line-height:1.1;}'+
     'a{text-decoration:none;color:inherit;}'+
-    '.wrap{max-width:1040px;margin:0 auto;padding:0 20px;}'+
-    'header{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid #eee;z-index:10;}'+
+    '.wrap{max-width:1040px;margin:0 auto;padding:0 20px;position:relative;z-index:1;}'+
+    'header{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #eee;z-index:10;}'+
     '.nav{display:flex;align-items:center;justify-content:space-between;height:64px;}'+
     '.logo{font-family:'+f.d+';font-weight:800;font-size:1.3rem;color:var(--c);}'+
-    '.navbtn{background:var(--c);color:#fff;padding:9px 16px;border-radius:var(--r);font-weight:700;font-size:.9rem;}'+
-    '.hero{padding:80px 0;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 65%,#000));color:#fff;text-align:center;}'+
+    '.navbtn{background:var(--c);color:#fff;padding:9px 16px;border-radius:var(--r);font-weight:700;font-size:.9rem;transition:transform .2s,box-shadow .2s;}'+
+    '.navbtn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px var(--c);}'+
+    /* Hero con degradado animado y formas flotantes */
+    '.hero{position:relative;overflow:hidden;padding:96px 0 130px;color:#fff;text-align:center;'+
+      'background:linear-gradient(120deg,var(--c),color-mix(in srgb,var(--c) 55%,#000),color-mix(in srgb,var(--c) 70%,#fff),var(--c));background-size:300% 300%;animation:grad 14s ease infinite;}'+
+    '@keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}'+
+    '.shape{position:absolute;border-radius:50%;background:rgba(255,255,255,.14);filter:blur(2px);animation:float 12s ease-in-out infinite;pointer-events:none;}'+
+    '.s1{width:220px;height:220px;top:-60px;left:-50px;}'+
+    '.s2{width:140px;height:140px;bottom:40px;right:8%;animation-delay:-4s;animation-duration:10s;}'+
+    '.s3{width:70px;height:70px;top:30%;right:22%;border-radius:18px;background:rgba(255,255,255,.2);animation-delay:-7s;}'+
+    '.s4{width:90px;height:90px;bottom:25%;left:12%;border-radius:24px;transform:rotate(20deg);animation-delay:-2s;animation-duration:14s;}'+
+    '@keyframes float{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(18px,-26px) rotate(12deg)}}'+
     '.hero .tag{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;opacity:.85;}'+
     '.hero h1{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:800;margin:14px 0;}'+
     '.hero p{font-size:1.2rem;opacity:.92;max-width:40ch;margin:0 auto 26px;}'+
     '.hero .cta{display:inline-block;background:#fff;color:var(--c);padding:14px 28px;border-radius:var(--r);font-weight:700;font-size:1.05rem;box-shadow:0 12px 30px -10px rgba(0,0,0,.4);}'+
+    '.wave{position:absolute;left:0;bottom:-1px;width:100%;height:80px;display:block;}'+
+    /* Botón con latido */
+    '.pulse{animation:beat 2.2s ease-in-out infinite;}'+
+    '@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.06)}24%{transform:scale(1)}36%{transform:scale(1.04)}48%{transform:scale(1)}}'+
+    '.pulse:hover{animation-play-state:paused;}'+
     'section{padding:64px 0;}'+
     '.st{text-align:center;font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;margin-bottom:8px;}'+
     '.sl{text-align:center;color:#667;margin-bottom:40px;}'+
     '.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}'+
-    '.card{background:#f8fafc;border:1px solid #eef1f6;border-radius:calc(var(--r) + 4px);padding:28px 20px;text-align:center;}'+
+    /* Tarjetas con hover elevado */
+    '.card{background:#f8fafc;border:1px solid #eef1f6;border-radius:calc(var(--r) + 4px);padding:28px 20px;text-align:center;transition:transform .3s ease,box-shadow .3s ease,border-color .3s;}'+
+    '.card:hover{transform:translateY(-8px);box-shadow:0 22px 40px -22px rgba(15,23,42,.45);border-color:color-mix(in srgb,var(--c) 35%,#fff);}'+
     '.card .ic{width:56px;height:56px;border-radius:50%;background:color-mix(in srgb,var(--c) 15%,#fff);color:var(--c);display:grid;place-items:center;margin:0 auto 14px;font-family:'+f.d+';font-weight:800;font-size:1.5rem;}'+
     '.card h3{font-size:1.15rem;}'+
+    /* Estadísticas */
+    '.stats{padding:44px 0;background:color-mix(in srgb,var(--c) 8%,#fff);}'+
+    '.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:center;}'+
+    '.stat b{display:block;font-family:'+f.d+';font-size:clamp(2rem,5vw,2.8rem);font-weight:800;color:var(--c);line-height:1.1;}'+
+    '.stat span{color:#556;font-size:.95rem;}'+
     '.why{background:#f8fafc;}'+
     '.why .cards .card{background:#fff;}'+
     '.contact{text-align:center;}'+
     '.contact .loc{color:#667;margin-bottom:20px;}'+
     '.cbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}'+
-    '.cbtn{background:#fff;border:2px solid var(--c);color:var(--c);padding:13px 24px;border-radius:var(--r);font-weight:700;}'+
+    '.cbtn{background:#fff;border:2px solid var(--c);color:var(--c);padding:13px 24px;border-radius:var(--r);font-weight:700;transition:transform .2s;}'+
+    '.cbtn:hover{transform:translateY(-3px);}'+
     '.cbtn.wa{background:#1FB855;border-color:#1FB855;color:#fff;}'+
     'footer{background:#0f172a;color:#cbd5e1;text-align:center;padding:30px 20px;font-size:.9rem;}'+
     '.fab{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;background:#1FB855;display:grid;place-items:center;box-shadow:0 10px 26px -8px rgba(12,124,57,.6);z-index:20;}'+
-    '@media(max-width:760px){.cards{grid-template-columns:1fr;}.hero{padding:60px 0;}}'+
+    /* Aparición al hacer scroll (solo si hay JavaScript) */
+    '.js .rv{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;transition-delay:calc(var(--i,0) * 90ms);}'+
+    '.js .rv.in{opacity:1;transform:none;}'+
+    '@media(max-width:760px){.cards{grid-template-columns:1fr;}.sgrid{grid-template-columns:1fr;}.hero{padding:70px 0 110px;}.wave{height:50px;}}'+
+    /* Respeta a quien pide menos movimiento */
+    '@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero,.shape,.pulse{animation:none!important}.js .rv{opacity:1;transform:none;transition:none}.card,.card:hover,.cbtn,.navbtn{transition:none;transform:none}}'+
     '</style></head><body>'+
     '<header><div class="wrap nav"><span class="logo">'+esc(d.name)+'</span><a class="navbtn" href="'+waLink+'" target="_blank" rel="noopener">'+cta+'</a></div></header>'+
-    '<section class="hero"><div class="wrap"><div class="tag">'+GIRO_LABEL[d.giro]+'</div>'+
+    '<section class="hero"><span class="shape s1"></span><span class="shape s2"></span><span class="shape s3"></span><span class="shape s4"></span>'+
+    '<div class="wrap"><div class="tag">'+label+'</div>'+
     '<h1>'+esc(d.name)+'</h1>'+
     '<p>'+esc(d.slogan||"Bienvenido. Estamos para servirte.")+'</p>'+
-    '<a class="cta" href="'+waLink+'" target="_blank" rel="noopener">'+cta+'</a></div></section>'+
-    '<section><div class="wrap"><h2 class="st">Lo que ofrecemos</h2><p class="sl">Conoce nuestros servicios</p>'+
+    '<a class="cta pulse" href="'+waLink+'" target="_blank" rel="noopener">'+cta+'</a></div>'+wave+'</section>'+
+    '<section><div class="wrap"><h2 class="st rv">Lo que ofrecemos</h2><p class="sl rv">Conoce nuestros servicios</p>'+
     '<div class="cards">'+servCards+'</div></div></section>'+
-    '<section class="why"><div class="wrap"><h2 class="st">¿Por qué elegirnos?</h2><p class="sl">Calidad y atención que se notan</p>'+
-    '<div class="cards"><div class="card"><div class="ic">★</div><h3>Calidad</h3></div>'+
-    '<div class="card"><div class="ic">⚡</div><h3>Atención rápida</h3></div>'+
-    '<div class="card"><div class="ic">♥</div><h3>Trato cercano</h3></div></div></div></section>'+
-    '<section class="contact"><div class="wrap"><h2 class="st">Contáctanos</h2>'+cityLine+
+    stats+
+    '<section class="why"><div class="wrap"><h2 class="st rv">¿Por qué elegirnos?</h2><p class="sl rv">Calidad y atención que se notan</p>'+
+    '<div class="cards"><div class="card rv"><div class="ic">★</div><h3>Calidad</h3></div>'+
+    '<div class="card rv" style="--i:1"><div class="ic">⚡</div><h3>Atención rápida</h3></div>'+
+    '<div class="card rv" style="--i:2"><div class="ic">♥</div><h3>Trato cercano</h3></div></div></div></section>'+
+    '<section class="contact"><div class="wrap rv"><h2 class="st">Contáctanos</h2>'+cityLine+
     '<div class="cbtns">'+contactBits+'</div></div></section>'+
     '<footer>© '+new Date().getFullYear()+' '+esc(d.name)+' · Hecho con InnovationTech</footer>'+
     '<a class="fab" href="'+waLink+'" target="_blank" rel="noopener" aria-label="WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg></a>'+
+    '<script>'+js+'<\/script>'+
     '</body></html>';
   }
 
@@ -348,8 +402,33 @@ Pedidos por WhatsApp</textarea>
   var PAYMENT_LINK = "https://buy.stripe.com/test_aFaeVd3Co3LCedF7Hp6Ri01";
   // 2) Cambia el precio que se muestra si es distinto
   var PRICE_LABEL = "$39 USD";
-  // (El dueño puede usarlo gratis abriendo la página con ?owner=1 al final de la URL)
+  // ================== MODO DUEÑO ==================
+  // Ya NO existe ?owner=1. El dueño abre la página con su clave secreta después de "#dueno=".
+  // Aquí solo se guarda la HUELLA (SHA-256) de la clave, nunca la clave misma.
+  // Para cambiar la clave, sigue las instrucciones del archivo MODO-DUENO.md.
+  var OWNER_HASH = "4adb530b0a3966febf9a243c90dbcc34618e0da5904a458801e1e49695a164bc";
+  var OWNER_KEY = "it_gen_k";
   var unlocked = false;
+
+  function sha256(txt){
+    if(!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.resolve("");
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(txt)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0"+b.toString(16)).slice(-2); }).join("");
+    });
+  }
+  function ownerCheck(){
+    var h=location.hash||"", m=h.match(/^#dueno=(.+)$/), saved="";
+    try{ saved=localStorage.getItem(OWNER_KEY)||""; }catch(e){}
+    if(h==="#salir"){ try{ localStorage.removeItem(OWNER_KEY); }catch(e){} history.replaceState(null,"",location.pathname+location.search); toast("Modo dueño desactivado"); return Promise.resolve(false); }
+    if(m){
+      history.replaceState(null,"",location.pathname+location.search); // borra la clave de la barra de direcciones
+      return sha256(decodeURIComponent(m[1])).then(function(x){
+        if(x===OWNER_HASH){ try{ localStorage.setItem(OWNER_KEY,x); }catch(e){} toast("Modo dueño activado 🔓"); return true; }
+        return false;
+      });
+    }
+    return Promise.resolve(saved===OWNER_HASH);
+  }
 
   function params(){ try{ return new URLSearchParams(location.search); }catch(e){ return null; } }
   function saveData(){ try{
@@ -409,11 +488,13 @@ Pedidos por WhatsApp</textarea>
   // Arranque
   (function(){
     var p=params();
-    if(p && p.get("owner")==="1"){ unlocked=true; }
     if(p && p.get("pago")==="ok"){ unlocked=true; restoreData(); }
     render();
     renderLock();
     if(p && p.get("pago")==="ok"){ setTimeout(function(){ toast("¡Gracias por tu pago! 🎉"); doDownload(); }, 900); }
+    function applyOwner(){ ownerCheck().then(function(ok){ if(ok){ unlocked=true; renderLock(); } else if(!(p && p.get("pago")==="ok")){ unlocked=false; renderLock(); } }).catch(function(){}); }
+    applyOwner();
+    window.addEventListener("hashchange", applyOwner); // por si la clave se escribe con la página ya abierta
   })();
 </script>
 
